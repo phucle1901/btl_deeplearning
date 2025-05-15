@@ -67,7 +67,7 @@ def save_loop(net, data_loader, n_iter):
     results['PSNR'].append('{:.4f}'.format(val_psnr))
     results['SSIM'].append('{:.4f}'.format(val_ssim))
     # save statistics
-    data_frame = pd.DataFrame(data=results, index=range(1, n_iter + 1))
+    data_frame = pd.DataFrame(data=results)
     data_frame.to_csv('{}/{}.csv'.format(args.save_path, args.data_name), index_label='Epoch', float_format='%.4f')
     if val_psnr > best_psnr and val_ssim > best_ssim:
         best_psnr, best_ssim = val_psnr, val_ssim
