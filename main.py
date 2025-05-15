@@ -78,7 +78,7 @@ def save_loop(net, data_loader, n_iter):
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
             'scheduler_state_dict': lr_scheduler.state_dict()
-        }, f'{args.save_path}/{args.data_name}.pth')
+        }, f'{args.save_path}/{args.data_name}_{n_iter}.pth')
 
 
 
