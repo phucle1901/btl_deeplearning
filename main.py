@@ -94,6 +94,14 @@ if __name__ == '__main__':
     optimizer = Adam(model.parameters(), lr=args.lr)
     lr_scheduler = MultiStepLR(optimizer, milestones=args.milestone, gamma=0.2)
     results['Loss'] = []
+
+    baseline = []
+    for rain, norain, _ in test_loader:
+        baseline.append(
+            ssim(rgb_to_y(rain.double()), rgb_to_y(norain.double())).item()
+        )
+    print(sum(baseline)/len(baseline))
+
     if args.model_file and (args.test_only=="false"):  #train tiep
         print("dang chay phan train tiep")
         ckpt = torch.load(args.model_file)
