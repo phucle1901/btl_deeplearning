@@ -95,6 +95,7 @@ if __name__ == '__main__':
     lr_scheduler = MultiStepLR(optimizer, milestones=args.milestone, gamma=0.2)
     results['Loss'] = []
     if args.model_file and (args.test_only=="false"):  #train tiep
+        print("dang chay phan train tiep")
         ckpt = torch.load(args.model_file)
         model.load_state_dict(torch.load(args.model_file))
         optimizer.load_state_dict(ckpt['optimizer_state_dict'])
@@ -108,9 +109,11 @@ if __name__ == '__main__':
             
     elif args.model_file and (args.test_only=="true"): #test
         model.load_state_dict(torch.load(args.model_file))
+        print("dang chay phan test")
         save_loop(model, test_loader, 1)
 
-    else:  #train lan dau
+    else:  #train lan dau'
+        print("train lan dau")
         for epoch in range(1, args.num_iter + 1):
             train_loss = train_loop(model, train_loader, epoch)
             results['Loss'].append('{:.4f}'.format(train_loss))
