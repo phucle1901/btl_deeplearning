@@ -33,7 +33,7 @@ def parse_args():
     parser.add_argument('--seed', type=int, default=-1, help='random seed (-1 for no manual seed)')
     # model_file is None means training stage, else means testing stage
     parser.add_argument('--model_file', type=str, default=None, help='path of pre-trained model file')
-    parser.add_argument('test_only',type=str, default="false", help='Chỉ chạy đánh giá, không train (dùng cùng --model_file)')
+    parser.add_argument('--test_only',type=str, default="false", help='Chỉ chạy đánh giá, không train (dùng cùng --model_file)')
 
     return init_args(parser.parse_args())
 
@@ -54,6 +54,7 @@ class Config(object):
         self.milestone = args.milestone
         self.workers = args.workers
         self.model_file = args.model_file
+        self.test_only=args.test_only
 
 
 def init_args(args):
