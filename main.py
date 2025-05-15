@@ -97,7 +97,7 @@ if __name__ == '__main__':
     if args.model_file and (args.test_only=="false"):  #train tiep
         print("dang chay phan train tiep")
         ckpt = torch.load(args.model_file)
-        model.load_state_dict(torch.load(args.model_file))
+        model.load_state_dict(ckpt['model_state_dict'])
         optimizer.load_state_dict(ckpt['optimizer_state_dict'])
         lr_scheduler.load_state_dict(ckpt['scheduler_state_dict'])
         start_epoch = ckpt['epoch'] + 1 
@@ -108,7 +108,10 @@ if __name__ == '__main__':
             save_loop(model, test_loader, epoch)
             
     elif args.model_file and (args.test_only=="true"): #test
-        model.load_state_dict(torch.load(args.model_file))
+        ckpt = torch.load(args.model_file)
+        model.load_state_dict(ckpt['model_state_dict'])
+        optimizer.load_state_dict(ckpt['optimizer_state_dict'])
+        lr_scheduler.load_state_dict(ckpt['scheduler_state_dict'])
         print("dang chay phan test")
         save_loop(model, test_loader, 1)
 
