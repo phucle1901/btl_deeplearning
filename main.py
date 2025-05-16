@@ -69,16 +69,15 @@ def save_loop(net, data_loader, n_iter):
     # save statistics
     data_frame = pd.DataFrame(data=results)
     data_frame.to_csv('{}/{}.csv'.format(args.save_path, args.data_name), index_label='Epoch', float_format='%.4f')
-    if n_iter==(args.num_iter+start_epoch):
-        best_psnr, best_ssim = val_psnr, val_ssim
-        with open('{}/{}.txt'.format(args.save_path, args.data_name), 'w') as f:
-            f.write('Epoch: {} PSNR:{:.2f} SSIM:{:.4f}'.format(n_iter, best_psnr, best_ssim))
-        torch.save({
-            'epoch': n_iter,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'scheduler_state_dict': lr_scheduler.state_dict()
-        }, f'{args.save_path}/{args.data_name}_{n_iter}.pth')
+    best_psnr, best_ssim = val_psnr, val_ssim
+    with open('{}/{}.txt'.format(args.save_path, args.data_name), 'w') as f:
+        f.write('Epoch: {} PSNR:{:.2f} SSIM:{:.4f}'.format(n_iter, best_psnr, best_ssim))
+    torch.save({
+        'epoch': n_iter,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'scheduler_state_dict': lr_scheduler.state_dict()
+    }, f'{args.save_path}/{args.data_name}_{n_iter}.pth')
 
 
 
