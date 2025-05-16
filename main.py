@@ -32,7 +32,7 @@ def train_loop(net, data_loader, n_iter):
         total_num += rain.size(0)
         total_loss += loss.item() * rain.size(0)
         train_bar.set_description('Train Epoch: [{}/{}] Loss: {:.4f}'
-                                  .format(n_iter, args.num_iter, total_loss / total_num))
+                                  .format(n_iter, args.num_iter+n_iter, total_loss / total_num))
     return total_loss / total_num
 
 
@@ -43,7 +43,7 @@ def test_loop(net, data_loader, n_iter):
         test_bar = tqdm(data_loader, initial=1, dynamic_ncols=True)
         for rain, norain, name in test_bar:
             rain, norain = rain.cuda(), norain.cuda()
-            b_0, list_b, list_r = model(rain)
+            b_0, list_b, list_r = net(rain)
             out = torch.clamp(list_b[-1], 0, 255).byte()
             # computer the metrics with Y channel and double precision
             y, gt = rgb_to_y(out.double()), rgb_to_y(norain.double())
@@ -56,7 +56,7 @@ def test_loop(net, data_loader, n_iter):
                 os.makedirs(os.path.dirname(save_path))
             Image.fromarray(out.squeeze(dim=0).permute(1, 2, 0).cpu().numpy()).save(save_path)
             test_bar.set_description('Test Epoch: [{}/{}] PSNR: {:.4f} SSIM: {:.4f}'
-                                     .format(n_iter, 1 if args.model_file else args.num_iter,
+                                     .format(n_iter, 1 if args.test_only=="true" else (args.num_iter+n_iter),
                                              total_psnr / count, total_ssim / count))
     return total_psnr / count, total_ssim / count
 
