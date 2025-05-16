@@ -32,7 +32,7 @@ def train_loop(net, data_loader, n_iter):
         total_num += rain.size(0)
         total_loss += loss.item() * rain.size(0)
         train_bar.set_description('Train Epoch: [{}/{}] Loss: {:.4f}'
-                                  .format(n_iter, args.num_iter+n_iter, total_loss / total_num))
+                                  .format(n_iter, args.num_iter+start_epoch, total_loss / total_num))
     return total_loss / total_num
 
 
@@ -56,7 +56,7 @@ def test_loop(net, data_loader, n_iter):
                 os.makedirs(os.path.dirname(save_path))
             Image.fromarray(out.squeeze(dim=0).permute(1, 2, 0).cpu().numpy()).save(save_path)
             test_bar.set_description('Test Epoch: [{}/{}] PSNR: {:.4f} SSIM: {:.4f}'
-                                     .format(n_iter, 1 if args.test_only=="true" else (args.num_iter+n_iter),
+                                     .format(n_iter, 1 if args.test_only=="true" else (args.num_iter+start_epoch),
                                              total_psnr / count, total_ssim / count))
     return total_psnr / count, total_ssim / count
 
@@ -69,7 +69,7 @@ def save_loop(net, data_loader, n_iter):
     # save statistics
     data_frame = pd.DataFrame(data=results)
     data_frame.to_csv('{}/{}.csv'.format(args.save_path, args.data_name), index_label='Epoch', float_format='%.4f')
-    if val_psnr > best_psnr and val_ssim > best_ssim:
+    if n_iter==(args.num_iter+start_epoch):
         best_psnr, best_ssim = val_psnr, val_ssim
         with open('{}/{}.txt'.format(args.save_path, args.data_name), 'w') as f:
             f.write('Epoch: {} PSNR:{:.2f} SSIM:{:.4f}'.format(n_iter, best_psnr, best_ssim))
@@ -101,7 +101,7 @@ if __name__ == '__main__':
             ssim(rgb_to_y(rain.double()), rgb_to_y(norain.double())).item()
         )
     print(sum(baseline)/len(baseline))
-
+    start_epoch=0
     if args.model_file and (args.test_only=="false"):  #train tiep
         print("dang chay phan train tiep")
         ckpt = torch.load(args.model_file)
