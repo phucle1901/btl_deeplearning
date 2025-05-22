@@ -93,7 +93,8 @@ if __name__ == '__main__':
     model = RCDNet(args.num_map, args.num_channel, args.num_block, args.num_stage).cuda()
     optimizer = Adam(model.parameters(), lr=args.lr)
     lr_scheduler = MultiStepLR(optimizer, milestones=args.milestone, gamma=0.2)
-    results['Loss'] = []
+    if args.test_only=="false":
+        results['Loss'] = []
 
     baseline = []
     for rain, norain, _ in test_loader:
